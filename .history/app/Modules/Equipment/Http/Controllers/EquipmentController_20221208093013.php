@@ -11,7 +11,6 @@ use App\Modules\NatureOfDamage\Models\NatureOfDamage;
 use App\Modules\TypeOfEquipment\Models\TypeOfEquipment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use PhpParser\Node\Expr\Array_;
 
 class EquipmentController extends Controller
 {
@@ -317,6 +316,7 @@ class EquipmentController extends Controller
 
         }
     }
+
     public function allClaim(){
         $equipment=Equipment::select()->where('ClaimOrIncident', "Claim")->with("typeOfEquipment")
         ->with("brand")
@@ -330,18 +330,21 @@ class EquipmentController extends Controller
             ];
     }
     public function allIncident(){
-        $equipments=Equipment::select()->where('ClaimOrIncident', "Incident")->with("typeOfEquipment")
+        $equipment=Equipment::select()->where('ClaimOrIncident', "Incident")->with("typeOfEquipment")
         ->with("brand")
         ->with("natureOfDamage")
         ->with("department")
         //->with("estimate")
         ->get();
-
+        if($equipment->brand==null){
+            $equipment->brand = ["id" => 0, "name" => ""];
+        }
             return [
-                "payload" => $equipments,
+                "payload" => $equipment,
                 "status" => "200_1"
             ];
     }
+
     public function delete(Request $request){
         $equipment=Equipment::find($request->id);
         if(!$equipment){
@@ -358,6 +361,7 @@ class EquipmentController extends Controller
             ];
         }
     }
+
     public function nature_of_damage_confirmAndSave($NatureOfDamage){
         $validator = Validator::make($NatureOfDamage, [
             "name" => "required:nature_of_damages,name",
@@ -397,6 +401,7 @@ class EquipmentController extends Controller
                 ];
             }
     }
+
     public function brand_confirmAndSave($Brand){
         $validator = Validator::make($Brand, [
             "name" => "required:brands,name",
@@ -437,6 +442,7 @@ class EquipmentController extends Controller
                 ];
             }
     }
+
     public function type_of_equipment_confirmAndSave($Type_of_equipment){
         $validator = Validator::make($Type_of_equipment, [
             "name" => "required:type_of_equipments,name",
@@ -477,4 +483,5 @@ class EquipmentController extends Controller
                 ];
             }
     }
+
 }

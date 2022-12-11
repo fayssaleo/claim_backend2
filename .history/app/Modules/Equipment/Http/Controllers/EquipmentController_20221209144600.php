@@ -336,9 +336,23 @@ class EquipmentController extends Controller
         ->with("department")
         //->with("estimate")
         ->get();
+        $equipmentsUpdated = [];
+        for ($x = 0; $x < count($equipments); $x++) {
+
+            if($equipments[$x]->brand==null){
+                $equipments[$x]->brand = ["id" => 0, "name" => ""];
+            }
+            if($equipments[$x]->nature_of_damage==null){
+                $equipments[$x]->nature_of_damage = ["id" => 0, "name" => ""];
+            }
+            if($equipments[$x]->type_of_equipment==null){
+                $equipments[$x]->type_of_equipment = ["id" => 0, "name" => ""];
+            }
+            array_push($equipmentsUpdated,$equipments[$x]);
+          }
 
             return [
-                "payload" => $equipments,
+                "payload" => $equipmentsUpdated,
                 "status" => "200_1"
             ];
     }

@@ -37,10 +37,7 @@ class Estimate extends Model
         return $this->belongsTo(Vessel::class);
     }
 
-    public function fileEstimates()
-    {
-        return $this->hasOne(fileEstimates::class);
-    }
+  
     public function customedField()
     {
         return $this->hasMany(CustomedField::class);

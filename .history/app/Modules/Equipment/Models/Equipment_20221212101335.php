@@ -48,11 +48,11 @@ class Equipment extends Model
     protected $casts = [
         'created_at' => 'datetime:m/d/Y H:i',
         'updated_at' => 'datetime:m/d/Y H:i',
-        'incident_date' => 'datetime:m/d/Y',
-        'claim_date' => 'datetime:m/d/Y',
-        'date_of_reimbursement' => 'datetime:m/d/Y',
-        'date_of_declaration' => 'datetime:m/d/Y',
-        'date_of_feedback' => 'datetime:m/d/Y',
+        'incident_date' => 'datetime:m/d/Y H:i',
+        'claim_date' => 'datetime:m/d/Y H:i',
+        'date_of_reimbursement' => 'datetime:m/d/Y H:i',
+        'date_of_declaration' => 'datetime:m/d/Y H:i',
+        'date_of_feedback' => 'datetime:m/d/Y H:i',
     ];
 
 }

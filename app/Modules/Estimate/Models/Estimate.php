@@ -11,6 +11,7 @@ use App\Modules\Equipment\Models\Equipment;
 use App\Modules\Container\Models\Container;
 use App\Modules\Vessel\Models\Vessel;
 use App\Modules\Estimate\Models\fileEstimates;
+use App\Modules\CustomedField\Models\CustomedField;
 
 class Estimate extends Model
 {
@@ -39,6 +40,10 @@ class Estimate extends Model
     public function fileEstimates()
     {
         return $this->hasOne(fileEstimates::class);
+    }
+    public function customedField()
+    {
+        return $this->hasMany(CustomedField::class);
     }
 
     protected $casts = [

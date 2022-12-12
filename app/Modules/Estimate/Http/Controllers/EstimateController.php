@@ -22,6 +22,7 @@ class EstimateController extends Controller
         $estimate=Estimate::select()
         ->where('equipment_id',"=", $id)
         ->with("fileEstimates")
+        ->with("customedField")
         ->get();
          for ($i=0; $i < count($estimate); $i++) {
             $EstimateModel = new stdClass();

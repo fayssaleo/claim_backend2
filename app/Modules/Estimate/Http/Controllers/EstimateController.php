@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Modules\Estimate\Models\Estimate;
 use \stdClass;
 use App\Libs\UploadTrait;
-use App\Modules\Estimate\Models\fileEstimates;
+use App\Modules\CustomedField\Models\CustomedField;
 
 class EstimateController extends Controller
 {
@@ -23,11 +23,24 @@ class EstimateController extends Controller
         ->where('equipment_id',"=", $id)
         ->with("customedField")
         ->get();
+        $amount = 0;
+
          for ($i=0; $i < count($estimate); $i++) {
+            //$amount = 0;
+
+              for ($j=0; $j < count($estimate[$i]->customedField); $j++) {
+
+                $customedField=CustomedField::make((array) $estimate[$i]->customedField[$j]);
+                $customedField->estimate_id=$estimate[$i]->id;
+
+                $customedField->save();
+                $amount = $estimate[$i]->customedField[$j]["value"] + $amount;
+            }
+
             $EstimateModel = new stdClass();
 
             $EstimateModel->estimate=$estimate[$i];
-            $EstimateModel->estimate_amount = $estimate[$i]->equipment_purchase_costs+$estimate[$i]->installation_and_facilities_costs+$estimate[$i]->rransportation_costs;
+            $EstimateModel->estimate_amount = $amount+$estimate[$i]->equipment_purchase_costs+$estimate[$i]->installation_and_facilities_costs+$estimate[$i]->rransportation_costs;
 
             $estimtesWithAmount->push($EstimateModel);
         }
@@ -124,18 +137,33 @@ class EstimateController extends Controller
             ];
         }
         $estimate=Estimate::make($request->all());
-        $file=$request->file;
-        $filename=time()."_".$file->getClientOriginalName();
-        $this->uploadOne($file, config('cdn.fileEstimates.path'),$filename,'public_uploads_fileEstimates');
-        $estimate->fileName=$filename;
+        if (!empty($request->file) && $request->file != null) {
 
+            $file=$request->file;
+            $filename=time()."_".$file->getClientOriginalName();
+            $this->uploadOne($file, config('cdn.fileEstimates.path'),$filename,'public_uploads_fileEstimates');
+            $estimate->fileName=$filename;
+        }
         $estimate->save();
+        $amount = 0;
+        if (!empty($request->customedFields)){
+            for ($i=0; $i < count($request->customedFields); $i++) {
+
+
+            $customedField=CustomedField::make($request->customedFields[$i]);
+            $customedField->estimate_id=$estimate->id;
+
+            $customedField->save();
+            $amount = $request->customedFields[$i]["value"];
+            }
+        }
+
 
         $EstimateModel = new stdClass();
 
 
         $EstimateModel->estimate=$estimate;
-        $EstimateModel->estimate_amount = $estimate->equipment_purchase_costs+$estimate->installation_and_facilities_costs+$estimate->rransportation_costs;
+        $EstimateModel->estimate_amount = $amount + $estimate->equipment_purchase_costs+$estimate->installation_and_facilities_costs+$estimate->rransportation_costs;
 
       //  dd($EstimateModel);
 
@@ -179,11 +207,38 @@ class EstimateController extends Controller
         $estimate->equipment_id=$request->equipment_id;
         $estimate->created_at=$estimate->created_at;
         $estimate->updated_at=$estimate->updated_at;
+        $amount = 0;
+        $testIncre = 0;
+        if (!empty($request->file) && $request->file != null) {
+
+            $file=$request->file;
+            $filename=time()."_".$file->getClientOriginalName();
+            $this->uploadOne($file, config('cdn.fileEstimates.path'),$filename,'public_uploads_fileEstimates');
+            $estimate->fileName=$filename;
+        }
+        //$estimate->fileName=null;
+       // dd($estimate);
+       if (!empty($request->customedFields)) {
+        for ($j=0; $j < count($request->customedFields); $j++) {
+           // $amount = 0;
+
+            if ($request->customedFields[$j]["id"] > 8999) {
+
+                $customedField=CustomedField::make((array) $request->customedFields[$j]);
+                $customedField->estimate_id=$estimate->id;
+
+                $customedField->save();
+                $amount = $request->customedFields[$j]["value"]  + $amount;
+            }
+            $testIncre = $testIncre + 1;
+        }
+       }
+
 
             $EstimateModel = new stdClass();
 
             $EstimateModel->estimate=$estimate;
-            $EstimateModel->estimate_amount = $estimate->equipment_purchase_costs+$estimate->installation_and_facilities_costs+$estimate->rransportation_costs;
+            $EstimateModel->estimate_amount = $amount +(double) $estimate->equipment_purchase_costs+ (double) $estimate->installation_and_facilities_costs+ (double) $estimate->rransportation_costs;
 
 
 
@@ -192,6 +247,7 @@ class EstimateController extends Controller
 
             return [
                 "payload" => $EstimateModel,
+                "testIncre" => $testIncre,
                 "status" => "200_00"
             ];
     }

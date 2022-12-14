@@ -35,6 +35,22 @@ class CustomedFieldController extends Controller
             ];
         }
     }
+    public function getByEstimateId($id){
+        $customedFields=CustomedField::select()->where('estimate_id', $id)
+        ->get();
+        if(!$customedFields){
+            return [
+                "payload" => "The searched row does not exist !",
+                "status" => "404_1"
+            ];
+        }
+        else {
+            return [
+                "payload" => $customedFields,
+                "status" => "200_1"
+            ];
+        }
+    }
 
 
     public function create(Request $request){

@@ -14,6 +14,7 @@ Route::group([
 
     Route::get('/', [CustomedFieldController::class, 'index']);
     Route::get('/{id}', [CustomedFieldController::class, 'get']);
+    Route::get('/getByEstimateId/{id}', [CustomedFieldController::class, 'getByEstimateId']);
     Route::post('/create', [CustomedFieldController::class, 'create']);
     Route::post('/update', [CustomedFieldController::class, 'update']);
     Route::post('/delete', [CustomedFieldController::class, 'delete']);

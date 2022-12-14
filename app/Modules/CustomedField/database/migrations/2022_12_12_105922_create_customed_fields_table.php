@@ -20,7 +20,7 @@ return new class extends Migration
 
 
             $table->bigInteger("estimate_id")->unsigned()->nullable();
-            $table->foreign('estimate_id')->references('id')->on('estimates');
+            $table->foreign('estimate_id')->references('id')->on('estimates')->onDelete('cascade');
 
 
             $table->timestamps();

@@ -148,8 +148,9 @@ class EstimateController extends Controller
             $estimate->fileName = $filename;
         }
         $estimate->save();
-        $estimate->customedFields = [];
         $amount = 0;
+        $estimate->customedFields = [];
+
         if (!empty($request->customedFields)) {
             for ($i = 0; $i < count($request->customedFields); $i++) {
 
@@ -217,16 +218,13 @@ class EstimateController extends Controller
 
         $amount = 0;
 
-         if (!empty($request->file) && $request->file != null ) {
-            if ($request->file != "create") {
-                $file = $request->file;
-                $filename = time() . "_" . $file->getClientOriginalName();
-                $this->uploadOne($file, config('cdn.fileEstimates.path'), $filename, 'public_uploads_fileEstimates');
-                $estimate->fileName = $filename;
-            }
-
+         if (!empty($request->file) && $request->file != null) {
+            $file = $request->file;
+            $filename = time() . "_" . $file->getClientOriginalName();
+            $this->uploadOne($file, config('cdn.fileEstimates.path'), $filename, 'public_uploads_fileEstimates');
+            $estimate->fileName = $filename;
         }
-         if ($request->file == "delete") {
+        if ($request->file == "delete") {
             if ($request->fileName == null) {
                 $estimate->fileName = null;
             }
@@ -296,12 +294,20 @@ class EstimateController extends Controller
         $estimate = Estimate::find($request->id);
 
         if (!empty($request->customedFields)) {
+
             for ($i = 0; $i < count($request->customedFields); $i++) {
 
+
+
                 $customedField=CustomedField::find($request->customedFields[$i]);
+
                 $customedField->delete();
+
             }
+
         }
+
+
         if (!$estimate) {
             return [
                 "payload" => "The searched row does not exist !",

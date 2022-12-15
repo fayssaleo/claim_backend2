@@ -106,27 +106,6 @@ class AutomobileController extends Controller
             }
             }
 
-            if($request->file()) {
-                if($request->incident_reportFile!=null){
-                    $file=$request->incident_reportFile;
-                    $filename=time()."_".$file->getClientOriginalName();
-                    $this->uploadOne($file, config('cdn.automobiles.path'),$filename,"public_uploads_equipments_incident_report");
-                    $automobile->incident_report=$filename;
-                }
-                if($request->liability_letterFile!=null){
-                    $file=$request->liability_letterFile;
-                    $filename=time()."_".$file->getClientOriginalName();
-                    $this->uploadOne($file, config('cdn.automobiles.path'),$filename,"public_uploads_equipments_liability_letter");
-                    $automobile->liability_letter=$filename;
-                }
-                if($request->insurance_declarationFile!=null){
-                    $file=$request->insurance_declarationFile;
-                    $filename=time()."_".$file->getClientOriginalName();
-                    $this->uploadOne($file, config('cdn.automobiles.path'),$filename,"public_uploads_equipments_insurance_declaration");
-                    $automobile->insurance_declaration=$filename;
-                }
-            }
-
             $automobile->save();
             return [
                 "payload" => $automobile,
@@ -172,7 +151,6 @@ class AutomobileController extends Controller
             $automobile->date_of_feedback=$request->date_of_feedback;
             $automobile->comment_Insurance=$request->comment_Insurance;
             $automobile->Indemnification_of_insurer=$request->Indemnification_of_insurer;
-            $automobile->Indemnification_date=$request->Indemnification_date;
             $automobile->currency_indemnisation=$request->currency_indemnisation;
             $automobile->deductible_charge_TAT=$request->deductible_charge_TAT;
             $automobile->damage_caused_by=$request->damage_caused_by;
@@ -181,106 +159,74 @@ class AutomobileController extends Controller
             $automobile->outsourcer_company_name=$request->outsourcer_company_name;
             $automobile->thirdparty_company_name=$request->thirdparty_company_name;
             $automobile->thirdparty_Activity_comments=$request->thirdparty_Activity_comments;
-            $automobile->incident_report=$request->incident_report;
-            $automobile->liability_letter=$request->liability_letter;
-            $automobile->insurance_declaration=$request->insurance_declaration;
 
 
-            if($request->nature_of_damage["name"]!=null || $request->nature_of_damage["name"]!=""){
-                if($request->nature_of_damage["id"]==0){
-                    $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndSave($request->nature_of_damage);
-                    if($nature_of_damage_returnedValue["IsReturnErrorRespone"]){
-                        return [
-                            "payload" => $nature_of_damage_returnedValue["payload"],
-                            "status" => $nature_of_damage_returnedValue["status"]
-                        ];
-                    }
-                    $automobile->nature_of_damage_id=$nature_of_damage_returnedValue["payload"]->id;
+            if($request->nature_of_damage["id"]==0){
+                $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndSave($request->nature_of_damage);
+                if($nature_of_damage_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $nature_of_damage_returnedValue["payload"],
+                        "status" => $nature_of_damage_returnedValue["status"]
+                    ];
                 }
-                else {
-                    $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndUpdate($request->nature_of_damage);
+                $automobile->nature_of_damage_id=$nature_of_damage_returnedValue["payload"]->id;
+            } else {
+                $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndUpdate($request->nature_of_damage);
 
-                    if($nature_of_damage_returnedValue["IsReturnErrorRespone"]){
-                        return [
-                            "payload" => $nature_of_damage_returnedValue["payload"],
-                            "status" => $nature_of_damage_returnedValue["status"]
-                        ];
-                    }
+                if($nature_of_damage_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $nature_of_damage_returnedValue["payload"],
+                        "status" => $nature_of_damage_returnedValue["status"]
+                    ];
                 }
             }
 
-            if($request->brand["name"]!=null || $request->brand["name"]!=""){
-                if($request->brand["id"]==0){
-                    $brand_returnedValue=$this->brand_confirmAndSave($request->brand);
 
-                    if($brand_returnedValue["IsReturnErrorRespone"]){
-                        return [
-                            "payload" => $brand_returnedValue["payload"],
-                            "status" => $brand_returnedValue["status"]
-                        ];
-                    }
-                    $automobile->brand_id=$brand_returnedValue["payload"]->id;
+            if($request->brand["id"]==0){
+                $brand_returnedValue=$this->brand_confirmAndSave($request->brand);
+
+                if($brand_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $brand_returnedValue["payload"],
+                        "status" => $brand_returnedValue["status"]
+                    ];
                 }
-                else{
-                    $brand_returnedValue=$this->brand_confirmAndUpdate($request->brand);
-
-                    if($brand_returnedValue["IsReturnErrorRespone"]){
-                        return [
-                            "payload" => $brand_returnedValue["payload"],
-                            "status" => $brand_returnedValue["status"]
-                        ];
-                    }
-                }
-
+                $automobile->brand_id=$brand_returnedValue["payload"]->id;
             }
+            else{
+                $band_returnedValue=$this->band_confirmAndUpdate($request->band);
 
-            if($request->type_of_equipment["name"]!=null || $request->type_of_equipment["name"]!=""){
-                if($request->type_of_equipment["id"]==0){
-                    $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndSave($request->type_of_equipment);
-                    if($type_of_equipment_returnedValue["IsReturnErrorRespone"]){
-                        return [
-                            "payload" => $type_of_equipment_returnedValue["payload"],
-                            "status" => $type_of_equipment_returnedValue["status"]
-                        ];
-                    }
-                    $automobile->type_of_equipment_id=$type_of_equipment_returnedValue["payload"]->id;
-                }
-                else{
-                    $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndUpdate($request->type_of_equipment);
-
-                    if($type_of_equipment_returnedValue["IsReturnErrorRespone"]){
-                        return [
-                            "payload" => $type_of_equipment_returnedValue["payload"],
-                            "status" => $type_of_equipment_returnedValue["status"]
-                        ];
-                    }
+                if($band_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $band_returnedValue["payload"],
+                        "status" => $band_returnedValue["status"]
+                    ];
                 }
             }
 
-            if($request->file()) {
-                if($request->incident_reportFile!=null && $request->incident_reportFile!=""){
-                    $file=$request->incident_reportFile;
-                    $filename=time()."_".$file->getClientOriginalName();
-                    $this->uploadOne($file, config('cdn.automobiles.path'),$filename,"public_uploads_equipments_incident_report");
-                    $automobile->incident_report=$filename;
+
+            if($request->type_of_equipment["id"]==0){
+                $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndSave($request->type_of_equipment);
+                if($type_of_equipment_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $type_of_equipment_returnedValue["payload"],
+                        "status" => $type_of_equipment_returnedValue["status"]
+                    ];
                 }
-                if($request->liability_letterFile!=null && $request->liability_letterFile!=""){
-                    $file=$request->liability_letterFile;
-                    $filename=time()."_".$file->getClientOriginalName();
-                    $this->uploadOne($file, config('cdn.automobiles.path'),$filename,"public_uploads_equipments_liability_letter");
-                    $automobile->liability_letter=$filename;
+                $automobile->brand_id=$type_of_equipment_returnedValue["payload"]->id;
+            }
+            else{
+                $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndUpdate($request->type_of_equipment);
+                $automobile->brand_id=$type_of_equipment_returnedValue["payload"]->id;
 
-
-
-                }
-                if($request->insurance_declarationFile!=null && $request->insurance_declarationFile!=""){
-                    $file=$request->insurance_declarationFile;
-                    $filename=time()."_".$file->getClientOriginalName();
-                    $this->uploadOne($file, config('cdn.automobiles.path'),$filename,"public_uploads_equipments_insurance_declaration");
-                    $automobile->insurance_declaration=$filename;
-
+                if($type_of_equipment_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $type_of_equipment_returnedValue["payload"],
+                        "status" => $type_of_equipment_returnedValue["status"]
+                    ];
                 }
             }
+
             $automobile->save();
 
             return [

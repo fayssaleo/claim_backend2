@@ -54,8 +54,6 @@ return new class extends Migration
             $table->date("date_of_feedback")->nullable();
             $table->string("comment_Insurance")->nullable();
             $table->string("Indemnification_of_insurer")->nullable();
-            $table->date("Indemnification_date")->nullable();
-
             $table->string("currency_indemnisation")->nullable();
             $table->double('deductible_charge_TAT', 20, 4)->nullable()->default(5000);
             $table->string("damage_caused_by")->nullable();
@@ -64,9 +62,6 @@ return new class extends Migration
             $table->string("outsourcer_company_name")->nullable();
             $table->string("thirdparty_company_name")->nullable();
             $table->string("thirdparty_Activity_comments")->nullable();
-            $table->string("incident_report")->nullable();
-            $table->string("liability_letter")->nullable();
-            $table->string("insurance_declaration")->nullable();
 
 
             $table->timestamps();

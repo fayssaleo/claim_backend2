@@ -30,8 +30,7 @@ class ContainerController extends Controller
 
 
 
-            if($request->nature_of_damage["name"]!=null || $request->nature_of_damage["name"]!=""){
-                if($request->nature_of_damage["id"]==0){
+            if($request->nature_of_damage["id"]==0){
                 $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndSave($request->nature_of_damage);
                 if($nature_of_damage_returnedValue["IsReturnErrorRespone"]){
                     return [
@@ -51,12 +50,31 @@ class ContainerController extends Controller
                     ];
                 }
             }
+
+
+
+
+
+           /*  if($request->type_of_equipment["id"]==0){
+                $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndSave($request->type_of_equipment);
+                if($type_of_equipment_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $type_of_equipment_returnedValue["payload"],
+                        "status" => $type_of_equipment_returnedValue["status"]
+                    ];
+                }
+                $container->type_of_equipment_id=$type_of_equipment_returnedValue["payload"]->id;
             }
+            else{
+                $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndUpdate($request->type_of_equipment);
 
-
-
-
-
+                if($type_of_equipment_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $type_of_equipment_returnedValue["payload"],
+                        "status" => $type_of_equipment_returnedValue["status"]
+                    ];
+                }
+            } */
 
             $container->save();
             return [

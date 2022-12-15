@@ -31,16 +31,19 @@ class EquipmentController extends Controller
 
             $equipment=Equipment::make($request->all());
 
-            if($request->nature_of_damage["name"]!=null || $request->nature_of_damage["name"]!=""){
-                if($request->nature_of_damage["id"]==0){
-                $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndSave($request->nature_of_damage);
-                if($nature_of_damage_returnedValue["IsReturnErrorRespone"]){
-                    return [
-                        "payload" => $nature_of_damage_returnedValue["payload"],
-                        "status" => $nature_of_damage_returnedValue["status"]
-                    ];
+
+            if($request->nature_of_damage["id"]==0){
+                if($request->nature_of_damage["name"]!=null || $request->nature_of_damage["name"]!=""){
+                    $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndSave($request->nature_of_damage);
+                        if($nature_of_damage_returnedValue["IsReturnErrorRespone"]){
+                            return [
+                                "payload" => $nature_of_damage_returnedValue["payload"],
+                                "status" => $nature_of_damage_returnedValue["status"]
+                            ];
+                        }
+                        $equipment->nature_of_damage_id=$nature_of_damage_returnedValue["payload"]->id;
                 }
-                $equipment->nature_of_damage_id=$nature_of_damage_returnedValue["payload"]->id;
+
             } else {
                 $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndUpdate($request->nature_of_damage);
                 $equipment->nature_of_damage_id=$request->nature_of_damage["id"];
@@ -52,12 +55,13 @@ class EquipmentController extends Controller
                     ];
                 }
             }
-            }
 
 
-            if($request->brand["name"]!=null || $request->brand["name"]!=""){
-                if($request->brand["id"]==0){
-                $brand_returnedValue=$this->brand_confirmAndSave($request->brand);
+
+
+            if($request->brand["id"]==0){
+                if($request->brand["name"]!=null || $request->brand["name"]!=""){
+                    $brand_returnedValue=$this->brand_confirmAndSave($request->brand);
 
                 if($brand_returnedValue["IsReturnErrorRespone"]){
                     return [
@@ -66,6 +70,7 @@ class EquipmentController extends Controller
                     ];
                 }
                 $equipment->brand_id=$brand_returnedValue["payload"]->id;
+                }
             }
             else{
                 $band_returnedValue=$this->brand_confirmAndUpdate($request->brand);
@@ -78,19 +83,21 @@ class EquipmentController extends Controller
                     ];
                 }
             }
-            }
 
 
-            if($request->type_of_equipment["name"]!=null || $request->type_of_equipment["name"]!=""){
-                if($request->type_of_equipment["id"]==0){
-                $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndSave($request->type_of_equipment);
-                if($type_of_equipment_returnedValue["IsReturnErrorRespone"]){
-                    return [
-                        "payload" => $type_of_equipment_returnedValue["payload"],
-                        "status" => $type_of_equipment_returnedValue["status"]
-                    ];
+
+
+            if($request->type_of_equipment["id"]==0){
+                if($request->type_of_equipment["name"]!=null || $request->type_of_equipment["name"]!=""){
+                    $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndSave($request->type_of_equipment);
+                    if($type_of_equipment_returnedValue["IsReturnErrorRespone"]){
+                        return [
+                            "payload" => $type_of_equipment_returnedValue["payload"],
+                            "status" => $type_of_equipment_returnedValue["status"]
+                        ];
+                    }
+                    $equipment->type_of_equipment_id=$type_of_equipment_returnedValue["payload"]->id;
                 }
-                $equipment->type_of_equipment_id=$type_of_equipment_returnedValue["payload"]->id;
             }
             else{
                 $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndUpdate($request->type_of_equipment);
@@ -103,26 +110,26 @@ class EquipmentController extends Controller
                     ];
                 }
             }
-            }
+
 
             if($request->file()) {
-                if($request->incedent_report!=null){
-                    $file=$request->incedent_report;
+                if($request->incident_reportFile!=null){
+                    $file=$request->incident_reportFile;
                     $filename=time()."_".$file->getClientOriginalName();
-                    $this->uploadOne($file, config('cdn.equipments.path'),$filename,"public_uploads_equipments_incedent_report");
-                    $equipment->filename=$filename;
+                    $this->uploadOne($file, config('cdn.equipments.path'),$filename,"public_uploads_equipments_incident_report");
+                    $equipment->incident_report=$filename;
                 }
-                if($request->liability_letter!=null){
-                    $file=$request->liability_letter;
+                if($request->liability_letterFile!=null){
+                    $file=$request->liability_letterFile;
                     $filename=time()."_".$file->getClientOriginalName();
                     $this->uploadOne($file, config('cdn.equipments.path'),$filename,"public_uploads_equipments_liability_letter");
-                    $equipment->filename=$filename;
+                    $equipment->liability_letter=$filename;
                 }
-                if($request->insurance_declaration!=null){
-                    $file=$request->insurance_declaration;
+                if($request->insurance_declarationFile!=null){
+                    $file=$request->insurance_declarationFile;
                     $filename=time()."_".$file->getClientOriginalName();
                     $this->uploadOne($file, config('cdn.equipments.path'),$filename,"public_uploads_equipments_insurance_declaration");
-                    $equipment->filename=$filename;
+                    $equipment->insurance_declaration=$filename;
                 }
             }
 
@@ -173,6 +180,7 @@ class EquipmentController extends Controller
             $equipment->date_of_feedback=$request->date_of_feedback;
             $equipment->comment_Insurance=$request->comment_Insurance;
             $equipment->Indemnification_of_insurer=$request->Indemnification_of_insurer;
+            $equipment->Indemnification_date=$request->Indemnification_date;
             $equipment->currency_indemnisation=$request->currency_indemnisation;
             $equipment->deductible_charge_TAT=$request->deductible_charge_TAT;
             $equipment->damage_caused_by=$request->damage_caused_by;
@@ -181,58 +189,67 @@ class EquipmentController extends Controller
             $equipment->outsourcer_company_name=$request->outsourcer_company_name;
             $equipment->thirdparty_company_name=$request->thirdparty_company_name;
             $equipment->thirdparty_Activity_comments=$request->thirdparty_Activity_comments;
+            $equipment->incident_report=$request->incident_report;
+            $equipment->liability_letter=$request->liability_letter;
+            $equipment->insurance_declaration=$request->insurance_declaration;
 
-            if($request->nature_of_damage["name"]!=null || $request->nature_of_damage["name"]!=""){
-                if($request->nature_of_damage["id"]==0){
+            if($request->nature_of_damage["id"]==0){
+                if($request->nature_of_damage["name"]!=null || $request->nature_of_damage["name"]!=""){
                     $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndSave($request->nature_of_damage);
-                    if($nature_of_damage_returnedValue["IsReturnErrorRespone"]){
-                        return [
-                            "payload" => $nature_of_damage_returnedValue["payload"],
-                            "status" => $nature_of_damage_returnedValue["status"]
-                        ];
-                    }
-                    $equipment->nature_of_damage_id=$nature_of_damage_returnedValue["payload"]->id;
+                        if($nature_of_damage_returnedValue["IsReturnErrorRespone"]){
+                            return [
+                                "payload" => $nature_of_damage_returnedValue["payload"],
+                                "status" => $nature_of_damage_returnedValue["status"]
+                            ];
+                        }
+                        $equipment->nature_of_damage_id=$nature_of_damage_returnedValue["payload"]->id;
                 }
-                else {
-                    $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndUpdate($request->nature_of_damage);
 
-                    if($nature_of_damage_returnedValue["IsReturnErrorRespone"]){
-                        return [
-                            "payload" => $nature_of_damage_returnedValue["payload"],
-                            "status" => $nature_of_damage_returnedValue["status"]
-                        ];
-                    }
+            } else {
+                $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndUpdate($request->nature_of_damage);
+                $equipment->nature_of_damage_id=$request->nature_of_damage["id"];
+
+                if($nature_of_damage_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $nature_of_damage_returnedValue["payload"],
+                        "status" => $nature_of_damage_returnedValue["status"]
+                    ];
                 }
             }
 
 
-            if($request->brand["name"]!=null || $request->brand["name"]!=""){
-                if($request->brand["id"]==0){
+
+
+            if($request->brand["id"]==0){
+                if($request->brand["name"]!=null || $request->brand["name"]!=""){
                     $brand_returnedValue=$this->brand_confirmAndSave($request->brand);
 
-                    if($brand_returnedValue["IsReturnErrorRespone"]){
-                        return [
-                            "payload" => $brand_returnedValue["payload"],
-                            "status" => $brand_returnedValue["status"]
-                        ];
-                    }
-                    $equipment->brand_id=$brand_returnedValue["payload"]->id;
+                if($brand_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $brand_returnedValue["payload"],
+                        "status" => $brand_returnedValue["status"]
+                    ];
                 }
-                else{
-                    $brand_returnedValue=$this->brand_confirmAndUpdate($request->brand);
-
-                    if($brand_returnedValue["IsReturnErrorRespone"]){
-                        return [
-                            "payload" => $brand_returnedValue["payload"],
-                            "status" => $brand_returnedValue["status"]
-                        ];
-                    }
+                $equipment->brand_id=$brand_returnedValue["payload"]->id;
                 }
+            }
+            else{
+                $band_returnedValue=$this->brand_confirmAndUpdate($request->brand);
+                $equipment->brand_id=$request->brand["id"];
 
+                if($band_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $band_returnedValue["payload"],
+                        "status" => $band_returnedValue["status"]
+                    ];
+                }
             }
 
-            if($request->type_of_equipment["name"]!=null || $request->type_of_equipment["name"]!=""){
-                if($request->type_of_equipment["id"]==0){
+
+
+
+            if($request->type_of_equipment["id"]==0){
+                if($request->type_of_equipment["name"]!=null || $request->type_of_equipment["name"]!=""){
                     $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndSave($request->type_of_equipment);
                     if($type_of_equipment_returnedValue["IsReturnErrorRespone"]){
                         return [
@@ -242,47 +259,45 @@ class EquipmentController extends Controller
                     }
                     $equipment->type_of_equipment_id=$type_of_equipment_returnedValue["payload"]->id;
                 }
-                else{
-                    $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndUpdate($request->type_of_equipment);
+            }
+            else{
+                $type_of_equipment_returnedValue=$this->type_of_equipment_confirmAndUpdate($request->type_of_equipment);
+                $equipment->type_of_equipment_id=$request->type_of_equipment["id"];
 
-                    if($type_of_equipment_returnedValue["IsReturnErrorRespone"]){
-                        return [
-                            "payload" => $type_of_equipment_returnedValue["payload"],
-                            "status" => $type_of_equipment_returnedValue["status"]
-                        ];
-                    }
+                if($type_of_equipment_returnedValue["IsReturnErrorRespone"]){
+                    return [
+                        "payload" => $type_of_equipment_returnedValue["payload"],
+                        "status" => $type_of_equipment_returnedValue["status"]
+                    ];
                 }
             }
 
             if($request->file()) {
-                if($request->incedent_report!=null){
-                    $file=$request->incedent_report;
+                if($request->incident_reportFile!=null && $request->incident_reportFile!=""){
+                    $file=$request->incident_reportFile;
                     $filename=time()."_".$file->getClientOriginalName();
-                    $this->uploadOne($file, config('cdn.equipments.path'),$filename,"public_uploads_equipments_incedent_report");
+                    $this->uploadOne($file, config('cdn.equipments.path'),$filename,"public_uploads_equipments_incident_report");
                     $equipment->incident_report=$filename;
                 }
-                if($request->liability_letter!=null){
-                    $file=$request->liability_letter;
+                if($request->liability_letterFile!=null && $request->liability_letterFile!=""){
+                    $file=$request->liability_letterFile;
                     $filename=time()."_".$file->getClientOriginalName();
                     $this->uploadOne($file, config('cdn.equipments.path'),$filename,"public_uploads_equipments_liability_letter");
-                    $equipment->filename=$filename;
+                    $equipment->liability_letter=$filename;
 
 
 
                 }
-                if($request->insurance_declaration!=null){
-                    $file=$request->insurance_declaration;
+                if($request->insurance_declarationFile!=null && $request->insurance_declarationFile!=""){
+                    $file=$request->insurance_declarationFile;
                     $filename=time()."_".$file->getClientOriginalName();
                     $this->uploadOne($file, config('cdn.equipments.path'),$filename,"public_uploads_equipments_insurance_declaration");
-                    $equipment->filename=$filename;
+                    $equipment->insurance_declaration=$filename;
 
                 }
             }
+
             $equipment->save();
-
-
-
-
 
             return [
                 "payload" => $equipment,
@@ -334,7 +349,7 @@ class EquipmentController extends Controller
     }
     public function nature_of_damage_confirmAndSave($NatureOfDamage){
         $validator = Validator::make($NatureOfDamage, [
-            "name" => "required:nature_of_damages,name",
+            //"name" => "required:nature_of_damages,name",
         ]);
         if ($validator->fails()) {
             return [
@@ -373,7 +388,7 @@ class EquipmentController extends Controller
     }
     public function brand_confirmAndSave($Brand){
         $validator = Validator::make($Brand, [
-            "name" => "required:brands,name",
+            //"name" => "required:brands,name",
         ]);
 
         if ($validator->fails()) {
@@ -413,7 +428,7 @@ class EquipmentController extends Controller
     }
     public function type_of_equipment_confirmAndSave($Type_of_equipment){
         $validator = Validator::make($Type_of_equipment, [
-            "name" => "required:type_of_equipments,name",
+            //"name" => "required:type_of_equipments,name",
         ]);
 
         if ($validator->fails()) {
@@ -422,7 +437,6 @@ class EquipmentController extends Controller
                 "status" => "406_2"
             ];
         }
-
         $type_of_equipemnt=TypeOfEquipment::make($Type_of_equipment);
         $type_of_equipemnt->save();
 
@@ -450,5 +464,11 @@ class EquipmentController extends Controller
                     "IsReturnErrorRespone" => false
                 ];
             }
+    }
+    public function getIncidentReportsFilePath(){
+        return [
+            "payload" => asset("/storage/cdn/equipments/incident_report"),
+            "status" => "200_1"
+        ];
     }
 }

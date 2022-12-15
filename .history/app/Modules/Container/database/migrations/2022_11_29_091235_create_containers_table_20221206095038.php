@@ -13,18 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('automobiles', function (Blueprint $table) {
+        Schema::create('containers', function (Blueprint $table) {
 
             $table->bigIncrements("id");
             $table->string("name")->nullable();
-            $table->string("categorie_of_equipment")->nullable();
+            $table->string("categorie_of_container")->nullable();
 
             $table->bigInteger("type_of_equipment_id")->unsigned()->nullable();
             $table->foreign('type_of_equipment_id')->references('id')->on('type_of_equipments')->onDelete('cascade');
 
-
-            $table->bigInteger("brand_id")->unsigned()->nullable();
-            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
 
             $table->bigInteger("nature_of_damage_id")->unsigned()->nullable();
             $table->foreign('nature_of_damage_id')->references('id')->on('nature_of_damages')->onDelete('cascade');
@@ -32,14 +29,15 @@ return new class extends Migration
             $table->bigInteger('department_id')->unsigned()->nullable();
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
 
-
+            $table->bigInteger('shipping_line_id')->unsigned()->nullable();
+            $table->foreign('shipping_line_id')->references('id')->on('shipping_lines')->onDelete('cascade');
 
             $table->string("status")->nullable();
             $table->date("incident_date")->nullable();
             $table->date("claim_date")->nullable();
             $table->string("ClaimOrIncident")->nullable();
             $table->string("concerned_internal_department")->nullable();
-            $table->string("equipement_registration")->nullable();
+           // $table->string("equipement_registration")->nullable();
             $table->string("cause_damage")->nullable();
             $table->string("Liability_letter_number")->nullable();
             $table->double('amount', 20, 4)->nullable();
@@ -54,8 +52,6 @@ return new class extends Migration
             $table->date("date_of_feedback")->nullable();
             $table->string("comment_Insurance")->nullable();
             $table->string("Indemnification_of_insurer")->nullable();
-            $table->date("Indemnification_date")->nullable();
-
             $table->string("currency_indemnisation")->nullable();
             $table->double('deductible_charge_TAT', 20, 4)->nullable()->default(5000);
             $table->string("damage_caused_by")->nullable();
@@ -64,10 +60,6 @@ return new class extends Migration
             $table->string("outsourcer_company_name")->nullable();
             $table->string("thirdparty_company_name")->nullable();
             $table->string("thirdparty_Activity_comments")->nullable();
-            $table->string("incident_report")->nullable();
-            $table->string("liability_letter")->nullable();
-            $table->string("insurance_declaration")->nullable();
-
 
             $table->timestamps();
         });
@@ -80,6 +72,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('automobiles');
+        Schema::dropIfExists('container');
     }
 };

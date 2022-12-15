@@ -185,6 +185,7 @@ class EquipmentController extends Controller
             $equipment->incident_report=$request->incident_report;
             $equipment->liability_letter=$request->liability_letter;
             $equipment->insurance_declaration=$request->insurance_declaration;
+            
             if($request->nature_of_damage["id"]==0){
                 if($request->nature_of_damage["name"]!=null || $request->nature_of_damage["name"]!=""){
                     $nature_of_damage_returnedValue=$this->nature_of_damage_confirmAndSave($request->nature_of_damage);

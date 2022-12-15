@@ -81,6 +81,25 @@ return [
 
         ],
 
+        'public_uploads_containers_incident_report' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/public/cdn/containers/incident_report'),
+            'visibility' => 'public',
+
+        ],
+        'public_uploads_containers_liability_letter' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/public/cdn/containers/liability_letter'),
+            'visibility' => 'public',
+
+        ],
+        'public_uploads_containers_insurance_declaration' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/public/cdn/containers/insurance_declaration'),
+            'visibility' => 'public',
+
+        ],
+
     ],
 
 

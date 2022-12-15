@@ -18,6 +18,7 @@ Route::group([
     Route::get('/{id}', [EstimateController::class, 'get']);
     Route::post('/create', [EstimateController::class, 'create']);
     Route::post('/update', [EstimateController::class, 'update']);
+    Route::post('/update/container', [EstimateController::class, 'updateContainer']);
     Route::post('/delete', [EstimateController::class, 'delete']);
     Route::get('/file/sendEstimateFileStoragePath', [EstimateController::class, 'sendEstimateFileStoragePath']);
     Route::post('/file/Addfile', [EstimateController::class, 'Addfile']);

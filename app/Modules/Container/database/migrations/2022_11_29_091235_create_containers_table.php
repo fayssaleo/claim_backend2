@@ -37,7 +37,13 @@ return new class extends Migration
             $table->date("claim_date")->nullable();
             $table->string("ClaimOrIncident")->nullable();
             $table->string("concerned_internal_department")->nullable();
-           // $table->string("equipement_registration")->nullable();
+
+            // new attr
+            $table->string("containerType")->nullable();
+            $table->bigInteger("containerID")->nullable();
+            $table->bigInteger("nombre_of_containers")->nullable();
+            //
+
             $table->string("cause_damage")->nullable();
             $table->string("Liability_letter_number")->nullable();
             $table->double('amount', 20, 4)->nullable();

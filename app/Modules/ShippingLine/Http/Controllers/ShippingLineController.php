@@ -12,7 +12,7 @@ class ShippingLineController extends Controller
 {
     public function index(){
 
-        $shippingLine=ShippingLine::with('department')->get();
+        $shippingLine=ShippingLine::all();
 
         return [
             "payload" => $shippingLine,
